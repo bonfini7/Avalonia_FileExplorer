@@ -1,0 +1,149 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FileManager_AvaloniaUI_HY33SZ.ViewModels"
+        xmlns:views="using:FileManager_AvaloniaUI_HY33SZ.Views"
+        xmlns:models="using:FileManager_AvaloniaUI_HY33SZ.Models"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="FileManager_AvaloniaUI_HY33SZ.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="FileManager_AvaloniaUI_HY33SZ"
+        Height="600" Width="1250"
+        MinWidth="1250" 
+        Opened="MainWindow_Opened">
+
+  <Window.Resources>
+    <views:TypeToBrushConverter x:Key="TypeToBrushConverter"/>
+    
+    <DataTemplate x:Key="BriefTemplate" DataType="{x:Type models:DirectoryEntry}">
+      <DockPanel LastChildFill="True">
+        <Grid DockPanel.Dock="Top" Background="{Binding Path=IsDir, Converter={StaticResource TypeToBrushConverter}}">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition SharedSizeGroup="col1"/>
+            <ColumnDefinition SharedSizeGroup="col2"/>
+            <ColumnDefinition SharedSizeGroup="col3"/>
+            <ColumnDefinition SharedSizeGroup="col3"/>
+          </Grid.ColumnDefinitions>
+
+          <TextBlock Margin="0,0,10,0" Text="{Binding Name}"/>
+        </Grid>
+      </DockPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="FullTemplate" DataType="{x:Type models:DirectoryEntry}">
+      <DockPanel LastChildFill="True">
+        <Grid DockPanel.Dock="Top" Background="{Binding Path=IsDir, Converter={StaticResource TypeToBrushConverter}}">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition SharedSizeGroup="col1"/>
+            <ColumnDefinition SharedSizeGroup="col2"/>
+            <ColumnDefinition SharedSizeGroup="col3"/>
+            <ColumnDefinition SharedSizeGroup="col3"/>
+          </Grid.ColumnDefinitions>
+
+          <TextBlock Margin="0,0,10,0" Text="{Binding Name}"/>
+          <TextBlock Grid.Column="1" Text="{Binding Extension}"/>
+          <TextBlock Grid.Column="2" Text="{Binding Size}"/>
+          <TextBlock Grid.Column="3" Text="{Binding LastWriteDate}"/>
+        </Grid>      
+      </DockPanel>
+    </DataTemplate>
+    
+     <ControlTemplate x:Key="FullControlTemplate">
+            <DockPanel LastChildFill="True">       
+               <Grid DockPanel.Dock="Top" Height="30">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition SharedSizeGroup="col1"/>
+                      <ColumnDefinition SharedSizeGroup="col2"/>
+                      <ColumnDefinition SharedSizeGroup="col3"/>
+                      <ColumnDefinition SharedSizeGroup="col4"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0">Name</Label>
+                    <Label Grid.Column="1">Extension</Label>
+                    <Label Grid.Column="2">Size</Label>
+                    <Label Grid.Column="3">Date</Label>
+                </Grid>
+              <ScrollViewer>
+                <ItemsPresenter/>
+              </ScrollViewer>
+            </DockPanel>
+       </ControlTemplate>
+    
+  </Window.Resources>
+
+
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="373*"/>
+      <ColumnDefinition Width="46*"/>
+      <ColumnDefinition Width="373*"/>
+    </Grid.ColumnDefinitions>
+
+    <DockPanel x:Name="left_fileList" Grid.Column="0">
+
+      <Grid DockPanel.Dock="Top">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="229*"/>
+          <ColumnDefinition Width="154*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="90*"/>
+          <RowDefinition Height="7*"/>
+        </Grid.RowDefinitions>
+
+        <ComboBox Grid.Row="0" x:Name="cb_left" DockPanel.Dock="Top" Items="{Binding Path=GetDrives}" SelectedIndex="0" HorizontalAlignment="Left" Height="28" Margin="10,10,0,0" VerticalAlignment="Top" Width="80"/>
+        <Label Grid.ColumnSpan="2" Grid.Row="1" x:Name="la_left_path" FontSize="9" DockPanel.Dock="Top" Content="{Binding CurrentDirectory}"/>
+        
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
+          <Button ToolTip.Tip="Brief view" Background="DodgerBlue" Click="BriefViewClick" Content="Br" Width="30" Height="27" Margin="3" x:Name="brief">
+            <Image Stretch="Fill" Source="/Assets/brief.png"/>
+          </Button>
+          <Button ToolTip.Tip="Full view" Background="LightGray" Click="FullViewClick" Content="F" Width="30" Height="27" Margin="3">
+            <Image Stretch="Fill" Source="/Assets/full.png"/>          
+          </Button>
+          <Button ToolTip.Tip="Tree view" Background="LightGray" Click="TreeViewClick" Content="Tr" Width="30" Height="27" Margin="3">
+            <Image Stretch="Fill" Source="/Assets/tree.png"/>
+          </Button>
+          <Button ToolTip.Tip="Custom view" Background="LightGray" Click="CustomViewClick" Content="C" Width="30" Height="27" Margin="3">
+            <Image Stretch="Fill" Source="/Assets/custom.png"/>
+          </Button>
+        </StackPanel>
+      </Grid>
+      
+      <DockPanel DockPanel.Dock="Bottom">
+        <Button DockPanel.Dock="Left" x:Name="bt_left_goback" Click="GoBackButtonClick" Content="&lt;" Width="30" IsVisible="False"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Stretch"
+                FontSize="25"/>      
+        <ListBox x:Name="left_listbox" HorizontalAlignment="Stretch" ItemTemplate="{StaticResource BriefTemplate}" Template="{StaticResource FullControlTemplate}" Items="{Binding Path=Entries}"  DoubleTapped="Listbox_DoubleTapped" SelectedItem="{Binding SelectedEntry}" Grid.IsSharedSizeScope="True"/>      
+      
+      </DockPanel>
+    </DockPanel>
+    
+    <DockPanel x:Name="right_fileList" Grid.Column="2">
+
+      <Grid DockPanel.Dock="Top">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="229*"/>
+          <ColumnDefinition Width="154*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="90*"/>
+          <RowDefinition Height="7*"/>
+        </Grid.RowDefinitions>
+
+        <ComboBox Grid.Row="0" x:Name="cb_right" DockPanel.Dock="Top" Items="{Binding Path=GetDrives}" SelectedIndex="0" HorizontalAlignment="Left" Height="28" Margin="10,10,0,0" VerticalAlignment="Top" Width="80"/>
+        <Label Grid.ColumnSpan="2" Grid.Row="1" x:Name="la_right_path" FontSize="9" DockPanel.Dock="Top" Content="{Binding CurrentDirectory}"/>
+
+      </Grid>
+
+      <DockPanel DockPanel.Dock="Bottom">
+        <Button DockPanel.Dock="Left" x:Name="bt_right_goback" Click="GoBackButtonClick" Content="&lt;" Width="30" IsVisible="False"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Stretch"
+                FontSize="25"/>
+        <ListBox x:Name="right_listbox" HorizontalAlignment="Stretch" ItemTemplate="{StaticResource BriefTemplate}" Template="{StaticResource FullControlTemplate}" Items="{Binding Path=Entries}"  DoubleTapped="Listbox_DoubleTapped" SelectedItem="{Binding SelectedEntry}" Grid.IsSharedSizeScope="True"/>
+      </DockPanel>
+    </DockPanel>
+
+  </Grid>
+  
+</Window>

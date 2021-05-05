@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="FileManager_AvaloniaUI_HY33SZ.Views.CustomViewWindow"
+        Title="Select properties"
+        MinWidth="300" MinHeight="345" MaxWidth="300" MaxHeight="345" Opened="CustomViewWindow_Opened">
+
+
+  <StackPanel Orientation="Vertical">
+
+    <CheckBox IsEnabled="False" Content="Name" IsChecked="{Binding Properties.Name}" Margin="10"/>
+    <CheckBox IsEnabled="False" Content="Extension" IsChecked="{Binding Properties.Extension}" Margin="10"/>
+    <CheckBox Content="Size"  IsChecked="{Binding Properties.Size}" Margin="10"/>
+    <CheckBox Content="ReadOnly" IsChecked="{Binding Properties.ReadOnly}" Margin="10"/>
+    <CheckBox Content="CreationTime" IsChecked="{Binding Properties.CreationTime}" Margin="10"/>
+    <CheckBox Content="LastWriteDate" IsChecked="{Binding Properties.LastWriteDate}" Margin="10"/>
+    
+    <Border Margin="0,0,0,0" BorderThickness="1" BorderBrush="Black">
+      <DockPanel  Margin="0,0,0,0" LastChildFill="True">
+        <Button Click="Apply_Click" Content="Apply" Margin="40,0,20,0" Width="80" Height="30"/>
+        <Button Click="Cancel_Click" Content="Cancel" Margin="40,0,20,0" Width="80" Height="30"/>
+      </DockPanel>
+    </Border>
+  </StackPanel>
+</Window>
